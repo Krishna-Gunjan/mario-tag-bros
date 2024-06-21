@@ -3,13 +3,17 @@ import pygame
 import sys
 from Screen import Screen
 from Character import Character
+from Block import Barrier
 
 pygame.init()
 
 screen_manager = Screen()
 screen_manager.load_theme('theme.json')
 screen = screen_manager.set_screen()
-screen_manager.draw_ground(screen)
+ground = screen_manager.draw_ground(screen)
+
+block1 = Barrier(100, 100, 100, 100)
+blocks = [ground, block1]  # Add more blocks to this list as needed
 
 character = Character()
 running = True
@@ -30,21 +34,20 @@ while running:
                 character.left = False
             elif event.key == pygame.K_RIGHT:
                 character.right = False
-            elif event.key == pygame.K_SPACE:
-                character.jump = False
 
-    screen.fill((255, 255, 255))
+    screen_manager.set_background_color(screen)
 
-    character.y_speed += character.gravity
-    character.player.y += character.y_speed
+    for block in blocks:
+        block.draw_barrier(screen)
+
     character.update()
+    character.handle_collisions(blocks)
+
     screen_manager.draw_character(screen, character)
+
     screen_manager.draw_ground(screen)
+
     pygame.display.flip()
-
-pygame.quit()
-sys.exit()
-
 
 pygame.quit()
 sys.exit()
