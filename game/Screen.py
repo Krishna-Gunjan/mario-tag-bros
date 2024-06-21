@@ -1,10 +1,9 @@
-import pygame
-import sys
 import ctypes
 import json
+import pygame
 
 class Screen():
-    def __init__(self, width, height):
+    def __init__(self):
         self.user32 = ctypes.windll.user32
         self.screen_width = self.user32.GetSystemMetrics(0)
         self.screen_height = self.user32.GetSystemMetrics(1)
@@ -26,28 +25,15 @@ class Screen():
         screen = pygame.display.set_mode((self.screen_width, self.screen_height), flags)
         pygame.display.set_caption("XYZ")
         return screen
+    
+    def draw_ground(self, screen):
+        ground = pygame.Rect(25, self.screen_height - 150, self.screen_width, 100)
+        pygame.draw.rect(screen, (0, 255, 0), ground)
+        pygame.display.flip()
 
     def set_background_color(self, screen):
         screen.fill(self.background_color)
         pygame.display.flip()
 
-
-# Initialize Pygame
-pygame.init()
-
-screen_manager = Screen()
-screen_manager.load_theme('theme.json')
-screen = screen_manager.set_screen()
-
-running = True
-
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    screen_manager.set_background_color(screen)
-
-# Quit Pygame
-pygame.quit()
-sys.exit()
+    def draw_character(self, screen, character):
+        pygame.draw.rect(screen, (255, 0, 0), character.player)
